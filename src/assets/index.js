@@ -1,6 +1,7 @@
 import logo from "./logo.svg";
 import backend from "./backend.png";
 import creator from "./creator.png";
+import front from "./front.png";
 import mobile from "./mobile.png";
 import web from "./web.png";
 import github from "./github.png";
@@ -29,11 +30,20 @@ import tesla from "./company/tesla.png";
 import carrent from "./carrent.png";
 import jobit from "./jobit.png";
 import tripguide from "./tripguide.png";
+import college from "./college.jpg";
+import e_commerce from "./e-commerce.jpg";
+import Gauravgo from "./Gauravgo.jpg";
+import Quleep from "./Quleep.jpg";
+
 
 export {
   logo,
   backend,
   creator,
+  front,
+  e_commerce,
+  Gauravgo,
+  Quleep,
   mobile,
   web,
   github,
@@ -54,7 +64,7 @@ export {
   threejs,
   meta,
   shopify,
-  starbucks,
+  college,
   tesla,
   carrent,
   jobit,
