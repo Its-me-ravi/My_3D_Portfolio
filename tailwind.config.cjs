@@ -3,6 +3,7 @@ module.exports = {
   content: ["./src/**/*.{js,jsx}"],
   mode: "jit",
   theme: {
+    //Ravi
     extend: {
       colors: {
         primary: "#050816",
