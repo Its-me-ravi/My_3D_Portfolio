@@ -1,4 +1,4 @@
-import logo from "./logo.svg";
+// import logo1 from "./logo.jpg";
 import backend from "./backend.png";
 import creator from "./creator.png";
 import front from "./front.png";
@@ -34,11 +34,13 @@ import college from "./college.jpg";
 import e_commerce from "./e-commerce.jpg";
 import Gauravgo from "./Gauravgo.jpg";
 import Quleep from "./Quleep.jpg";
+import logo1 from "./logo1.jpg"
 
 
 export {
-  logo,
+  
   backend,
+  logo1,
   creator,
   front,
   e_commerce,
