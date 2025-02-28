@@ -5,7 +5,7 @@ import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
 import CanvasLoader from "../Loader";
 
 const Computers = ({ isMobile }) => {
-  const computer = useGLTF("./desktop_pc/scene.gltf");
+  const computer = useGLTF("/desktop_pc/scene.gltf");
 
   return (
     <mesh>
@@ -64,11 +64,14 @@ const ComputersCanvas = () => {
     <Canvas
       shadows
       dpr={[1, 2]}
-      camera={{ position: [5, 2, 5], fov: 50 }}
+      camera={{ position: [20, 3, 5], fov: 25 }}
       gl={{
         preserveDrawingBuffer: true,
         antialias: true,
         powerPreference: "high-performance",
+      }}
+      onCreated={({ gl }) => {
+        console.log("WebGL Renderer Created", gl);
       }}
     >
       <Suspense fallback={<CanvasLoader />}>
