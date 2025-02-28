@@ -79,23 +79,14 @@
 
 
 
-
-
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF } from "@react-three/drei";
+import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
+
 import CanvasLoader from "../Loader";
 
-const MODEL_PATH = "/desktop_pc/scene.gltf"; // Ensure the model is in the 'public' folder
-
 const Computers = ({ isMobile }) => {
-  const gltf = useGLTF(MODEL_PATH);
-
-  // ✅ Prevent rendering if the model failed to load
-  if (!gltf?.scene) {
-    console.error("GLTF model failed to load:", MODEL_PATH);
-    return <mesh />;
-  }
+  const computer = useGLTF("./desktop_pc/scene.gltf");
 
   return (
     <mesh>
@@ -110,7 +101,7 @@ const Computers = ({ isMobile }) => {
       />
       <pointLight intensity={1} />
       <primitive
-        object={gltf.scene}
+        object={computer.scene}
         scale={isMobile ? 0.7 : 0.75}
         position={isMobile ? [0, -3, -2.2] : [0, -3.25, -1.5]}
         rotation={[-0.01, -0.2, -0.1]}
@@ -120,10 +111,41 @@ const Computers = ({ isMobile }) => {
 };
 
 const ComputersCanvas = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)"); // Mobile breakpoint
+
+    setIsMobile(mediaQuery.matches);
+
+    const handleMediaQueryChange = (event) => {
+      setIsMobile(event.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleMediaQueryChange);
+    };
+  }, []);
+
+  // ✅ If mobile, show text details instead of 3D model
+  if (isMobile) {
+    return (
+      <div style={{ textAlign: "center", padding: "20px", color: "white" }}>
+        <h2>Welcome to Our Page!</h2>
+        <p>This is a mobile-friendly version.</p>
+        <p>Explore the site for more details.</p>
+      </div>
+    );
+  }
+
+  // ✅ If not mobile, show the 3D model
   return (
     <Canvas
       frameloop="demand"
       shadows
+      dpr={[1, 2]}
       camera={{ position: [20, 3, 5], fov: 25 }}
       gl={{ preserveDrawingBuffer: true }}
     >
@@ -133,10 +155,16 @@ const ComputersCanvas = () => {
           maxPolarAngle={Math.PI / 2}
           minPolarAngle={Math.PI / 2}
         />
-        <Computers />
+        <Computers isMobile={isMobile} />
       </Suspense>
+
+      <Preload all />
     </Canvas>
   );
 };
 
 export default ComputersCanvas;
+
+
+
+      
