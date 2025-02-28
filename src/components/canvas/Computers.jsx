@@ -133,9 +133,7 @@ const ComputersCanvas = () => {
   if (isMobile) {
     return (
       <div style={{ textAlign: "center", padding: "20px", color: "white" }}>
-        <h2>Welcome to Our Page!</h2>
-        <p>This is a mobile-friendly version.</p>
-        <p>Explore the site for more details.</p>
+        
       </div>
     );
   }
