@@ -81,23 +81,19 @@
 
 
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
-import * as THREE from "three";
-
+import { OrbitControls, useGLTF } from "@react-three/drei";
 import CanvasLoader from "../Loader";
 
-// ✅ Fix model path for mobile compatibility
-const MODEL_PATH = import.meta.env.BASE_URL + "desktop_pc/scene.gltf";
+const MODEL_PATH = "/desktop_pc/scene.gltf"; // Ensure the model is in the 'public' folder
 
-// ✅ Component to Load 3D Model
 const Computers = ({ isMobile }) => {
-  let computer;
-  try {
-    computer = useGLTF(MODEL_PATH);
-  } catch (error) {
-    console.error("GLTF Load Error:", error);
+  const gltf = useGLTF(MODEL_PATH);
+
+  // ✅ Prevent rendering if the model failed to load
+  if (!gltf?.scene) {
+    console.error("GLTF model failed to load:", MODEL_PATH);
     return <mesh />;
   }
 
@@ -114,7 +110,7 @@ const Computers = ({ isMobile }) => {
       />
       <pointLight intensity={1} />
       <primitive
-        object={computer.scene}
+        object={gltf.scene}
         scale={isMobile ? 0.7 : 0.75}
         position={isMobile ? [0, -3, -2.2] : [0, -3.25, -1.5]}
         rotation={[-0.01, -0.2, -0.1]}
@@ -123,40 +119,13 @@ const Computers = ({ isMobile }) => {
   );
 };
 
-// ✅ Canvas Component
 const ComputersCanvas = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    // ✅ Improved Mobile Detection (better than max-width)
-    const mediaQuery = window.matchMedia("(pointer: coarse)");
-
-    setIsMobile(mediaQuery.matches);
-
-    const handleMediaQueryChange = (event) => {
-      setIsMobile(event.matches);
-    };
-
-    mediaQuery.addEventListener("change", handleMediaQueryChange);
-    return () => {
-      mediaQuery.removeEventListener("change", handleMediaQueryChange);
-    };
-  }, []);
-
   return (
     <Canvas
+      frameloop="demand"
       shadows
-      dpr={[1, 2]}
       camera={{ position: [20, 3, 5], fov: 25 }}
-      gl={{
-        preserveDrawingBuffer: true,
-        antialias: true,
-        powerPreference: "high-performance",
-      }}
-      onCreated={({ gl }) => {
-        gl.forceContextRestore(); // ✅ Restore WebGL Context if lost
-        console.log("WebGL Renderer Created", gl);
-      }}
+      gl={{ preserveDrawingBuffer: true }}
     >
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls
@@ -164,10 +133,8 @@ const ComputersCanvas = () => {
           maxPolarAngle={Math.PI / 2}
           minPolarAngle={Math.PI / 2}
         />
-        <Computers isMobile={isMobile} />
+        <Computers />
       </Suspense>
-
-      <Preload all />
     </Canvas>
   );
 };
